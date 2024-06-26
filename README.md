@@ -74,3 +74,7 @@ FLUSH PRIVILEGES;
 ```shell
 Server is running on port 3000
 ```
+
+## ```Verify the Application```
+### CHECK THE FILE 
+[Verify the Application](./Verify_the_Application.md)
