@@ -2,8 +2,8 @@ const mysql = require('mysql');
 
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: '',
+    user: 'fitaura_user',
+    password: 'P@ssw0rd',  // Replace with your new user's password
     database: 'fitAura_DB'
 });
 
@@ -16,3 +16,6 @@ connection.connect(err => {
 });
 
 module.exports = connection;
+
+
+
