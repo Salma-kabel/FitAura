@@ -74,6 +74,21 @@ curl http://localhost:5000/api/dashboard \
 -H "Authorization: Bearer <JWT_TOKEN>"
 ```
 
+Exercises:
+create exercise:
+```bash
+curl -X POST http://localhost:5000/api/exercises/exerciseinput \
+-H "Content-Type: application/json" \
+-d '{"name":"testexercise", "description":"testtest", "calories":10}'
+```
+log exercise:
+Have to create at least one user and one exercise first.
+```bash
+curl -X POST http://localhost:5000/api/exercises/logexercise \
+-H "Content-Type: application/json" \
+-d '{"userId":1, "exerciseId":1, "duration":20}'
+```
+
 Next Steps
 Implement additional features such as logging exercises, setting goals, and tracking progress.
 Add chart visualization for fitness data.
