@@ -2,7 +2,7 @@ const express = require('express');
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protected');
-const exercisesRoutes = require('./routes/exercises');
+const exerciseRoutes = require('./routes/exercise');
 
 require('dotenv').config();
 
@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
-app.use('/api/exercises', exercisesRoutes);
+app.use('/api/exercises', exerciseRoutes);
 
 sequelize.sync().then(() => {
   app.listen(process.env.PORT, () => {
