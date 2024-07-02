@@ -34,19 +34,9 @@ Implemented user registration and login using JWT for authentication. The JWT is
 
 ## Installation
 
-Install dotenv Module:
+Install dependencies:
 ```bash
-npm install dotenv
-```
-
-Install bcryptjs Module:
-```bash
-npm install bcryptjs
-```
-
-Install jsonwebtoken Module:
-```bash
-npm install jsonwebtoken
+npm i
 ```
 
 Testing the Application
