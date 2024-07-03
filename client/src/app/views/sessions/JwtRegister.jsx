@@ -1,11 +1,11 @@
 import { Formik } from "formik";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Card, Checkbox, Grid, TextField, useTheme, Box, styled } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import * as Yup from "yup";
 
-import useAuth from "app/hooks/useAuth";
+import AuthContext from "../../contexts/AuthContext";
 import { Paragraph } from "app/components/Typography";
 
 // STYLED COMPONENTS
@@ -55,16 +55,16 @@ const validationSchema = Yup.object().shape({
 
 export default function JwtRegister() {
   const theme = useTheme();
-  const { register } = useAuth();
+  const { register } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = async (values) => {
     setLoading(true);
 
     try {
-      register(values.email, values.username, values.password);
-      navigate("/");
+      await register(values.email, values.username, values.password);
+      navigate("/dashboard/default");
       setLoading(false);
     } catch (e) {
       console.log(e);

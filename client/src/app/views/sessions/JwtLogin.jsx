@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Card, Checkbox, Grid, TextField, Box, styled, useTheme } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import useAuth from "app/hooks/useAuth";
+import AuthContext from "../../contexts/AuthContext";
 import { Paragraph } from "app/components/Typography";
 
 // STYLED COMPONENTS
@@ -65,13 +65,13 @@ export default function JwtLogin() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
 
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      await login(values.email, values.password);
-      navigate("/");
+      await login({ email: values.email, password: values.password });
+      navigate("/dashboard/default");
     } catch (e) {
       setLoading(false);
     }
