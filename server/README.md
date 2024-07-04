@@ -42,42 +42,11 @@ npm i
 Testing the Application
 Run Backend Server:
 ```bash
-npx nodemon server.js
+npm run dev
 ```
 Test API Endpoints:
-Use Postman or curl to test the registration and login endpoints:
-Register:
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
--H "Content-Type: application/json" \
--d '{"username":"testuser", "email":"test@example.com", "password":"testpass"}'
-```
-Login:
-```bash
-curl -X POST http://localhost:5000/api/auth/login \
--H "Content-Type: application/json" \
--d '{"email":"test@example.com", "password":"testpass"}'
-```
-Protected Route (dashboard):
-```bash
-curl http://localhost:5000/api/dashboard \
--H "Authorization: Bearer <JWT_TOKEN>"
-```
+Use [Postman](https://www.postman.com/mekky16/workspace/fitaura/collection/33357340-d19603db-483f-4e1a-86e5-8a0e455fcbd1?action=share&creator=33357340) to test the registration and login endpoints.
 
-Exercises:
-create exercise:
-```bash
-curl -X POST http://localhost:5000/api/exercises/exerciseinput \
--H "Content-Type: application/json" \
--d '{"name":"testexercise", "description":"testtest", "calories":10}'
-```
-log exercise:
-Have to create at least one user and one exercise first.
-```bash
-curl -X POST http://localhost:5000/api/exercises/logexercise \
--H "Content-Type: application/json" \
--d '{"userId":1, "exerciseId":1, "duration":20}'
-```
 
 Next Steps
 Implement additional features such as logging exercises, setting goals, and tracking progress.

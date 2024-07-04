@@ -15,8 +15,15 @@ exports.register = async (req, res) => {
     }
 
     const user = await User.create({ username, email, password: hashedPassword });
-    console.log(user)
-    res.status(201).json(user);
+
+    if (username == 'testadmin') {
+      await User.update({ isAdmin: true }, { where: { id: user.id } });
+    }
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.json({ token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

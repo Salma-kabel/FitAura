@@ -4,8 +4,7 @@ const Exercise = require('../models/Exercise');
 
 exports.createRoutine = async (req, res) => {
   const { name } = req.body;
-  console.log("User in createRoutine:", req.user);
-  const userId = req.user.userId;
+  const userId = req.user.id;
 
   try {
     const routine = await Routine.create({
@@ -21,7 +20,7 @@ exports.createRoutine = async (req, res) => {
 
 exports.addExerciseToRoutine = async (req, res) => {
   const { routineId, exerciseId, day } = req.body;
-  const userId = req.user.userId;
+  const userId = req.user.id;
 
   try {
     const routine = await Routine.findOne({ where: { id: routineId, userId } });
@@ -49,15 +48,11 @@ exports.addExerciseToRoutine = async (req, res) => {
 
 exports.getRoutine = async (req, res) => {
   const routineId = req.params.id;
-  const userId = req.user.userId;
+  const userId = req.user.id;
 
   try {
     const routine = await Routine.findOne({
       where: { id: routineId, userId },
-      include: {
-        model: RoutineExercise,
-        include: Exercise,
-      },
     });
 
     if (!routine) {
@@ -72,15 +67,11 @@ exports.getRoutine = async (req, res) => {
 };
 
 exports.getUserRoutines = async (req, res) => {
-  const userId = req.user.userId;
+  const userId = req.user.id;
 
   try {
     const routines = await Routine.findAll({
       where: { userId },
-      include: {
-        model: RoutineExercise,
-        include: Exercise,
-      },
     });
 
     res.status(200).json(routines);

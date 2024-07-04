@@ -1,4 +1,6 @@
 const Exercise = require('../models/Exercise');
+const UserExercise = require('../models/UserExercise');
+const User = require('../models/User');
 
 exports.addExerciseToRoutine = async (req, res) => {
   const { exerciseId } = req.body;
