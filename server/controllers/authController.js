@@ -27,16 +27,30 @@ exports.register = async (req, res) => {
       return res.status(400).json({ error: 'Username already exists' });
     }
 
-    const user = await User.create({ username, email, password: hashedPassword });
-
     if (username == 'testadmin') {
       await User.update({ isAdmin: true }, { where: { id: user.id } });
     }
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      username,
+      email,
+      password: hashedPassword
     });
 
-    res.json({ token });
+    await UserInfo.create({
+      userId: user.id,
+      gender,
+      age,
+      weight,
+      height,
+      bodyFatPercent,
+      muscleMassPercent,
+      goalWeight,
+      goalBodyFatPercent,
+      goalMuscleMassPercent,
+    });
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
