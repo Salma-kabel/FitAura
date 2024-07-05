@@ -1,12 +1,9 @@
-// server/routes/auth.js
-import express from 'express';
-import { login, register, profile } from '../controllers/authController';
-import { authMiddleware } from '../middlewares/authMiddleware';
+const express = require('express');
+const { register, login } = require('../controllers/authController');
 
 const router = express.Router();
 
-router.post('/signin', login);
-router.post('/signup', register);
-router.get('/profile', authMiddleware, profile);
+router.post('/register', register);
+router.post('/login', login);
 
-export default router;
+module.exports = router;

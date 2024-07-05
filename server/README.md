@@ -39,10 +39,6 @@ Install dependencies:
 npm i
 ```
 
-```
-npm install express cors dotenv sequelize mysql2 bcryptjs jsonwebtoken
-```
-
 Testing the Application
 Run Backend Server:
 ```bash
