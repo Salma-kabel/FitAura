@@ -4,6 +4,7 @@ const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protected');
 const exerciseRoutes = require('./routes/exercise');
 const routineRoutes = require('./routes/routine');
+const cors = require('cors');
 
 require('dotenv').config();
 
@@ -18,7 +19,7 @@ RoutineExercise.belongsTo(Exercise, { foreignKey: 'exerciseId' });
 Exercise.hasMany(RoutineExercise, { foreignKey: 'exerciseId', as: 'routineExercises' });
 
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);

@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
+    "start-server": "nodemon --exec babel-node --presets @babel/preset-env ./server.js",
+    "start-client": "cd client && npm start",
     "lint": "./node_modules/.bin/eslint",
     "check-lint": "lint [0-9]*.js",
-    "start-server": "nodemon --exec babel-node --presets @babel/preset-env ./server.js",
     "start-worker": "nodemon --exec babel-node --presets @babel/preset-env ./worker.js",
     "dev": "nodemon --exec babel-node --presets @babel/preset-env ./server.js",
     "test": "./node_modules/.bin/mocha --require @babel/register --exit"
@@ -17,6 +19,7 @@
     "bcryptjs": "^2.4.3",
     "bull": "^3.16.0",
     "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.17.1",
     "image-thumbnail": "^1.0.10",
@@ -30,10 +33,10 @@
     "uuid": "^8.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.0",
-    "@babel/core": "^7.8.0",
-    "@babel/node": "^7.8.0",
-    "@babel/preset-env": "^7.8.2",
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/node": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
     "@babel/register": "^7.8.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",

@@ -1,36 +1,26 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Exercise = sequelize.define('Exercise', {
+const RoutineExercise = sequelize.define('RoutineExercise', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  userId: {
+  routineId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  duration: {
+  exerciseId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  description: {
-    type: DataTypes.STRING,
-  },
-  caloriesBurned: {
-    type: DataTypes.INTEGER,
-  },
-  date: {
+  day: {
     type: DataTypes.STRING,
     allowNull: false,
-  }, 
+  },
 }, {
     timestamps: true,
 });
 
-module.exports = Exercise;
+module.exports = RoutineExercise;
