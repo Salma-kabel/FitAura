@@ -6,10 +6,12 @@ const {
   addExerciseToRoutine,
   getRoutine,
   getUserRoutines,
+  getRoutineExercises,
 } = require('../controllers/routineController');
 
 router.post('/create', authMiddleware, createRoutine);
 router.post('/add-exercise', authMiddleware, addExerciseToRoutine);
+router.get('/exercises', authMiddleware, getRoutineExercises);
 router.get('/:id', authMiddleware, getRoutine);
 router.get('/', authMiddleware, getUserRoutines);
 

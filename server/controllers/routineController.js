@@ -1,5 +1,4 @@
 const Routine = require('../models/Routine');
-const RoutineExercise = require('../models/RoutineExercise');
 const Exercise = require('../models/Exercise');
 
 exports.createRoutine = async (req, res) => {
@@ -33,11 +32,7 @@ exports.addExerciseToRoutine = async (req, res) => {
       return res.status(404).json({ error: 'Exercise not found' });
     }
 
-    const routineExercise = await RoutineExercise.create({
-      routineId,
-      exerciseId,
-      day,
-    });
+    const routineExercise = await routine.addExercise(exercise);
 
     res.status(201).json(routineExercise);
   } catch (error) {
@@ -53,6 +48,7 @@ exports.getRoutine = async (req, res) => {
   try {
     const routine = await Routine.findOne({
       where: { id: routineId, userId },
+      include: [Exercise],
     });
 
     if (!routine) {
@@ -72,11 +68,27 @@ exports.getUserRoutines = async (req, res) => {
   try {
     const routines = await Routine.findAll({
       where: { userId },
+      include: [Exercise],
     });
 
     res.status(200).json(routines);
   } catch (error) {
     console.error('Error retrieving routines:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getRoutineExercises = async (req, res) => {
+  const userId = req.user.id;
+  const { routineId } = req.body
+
+  try {
+    const userExercises = await Exercise.findAll({
+      where: { routineId, userId },
+    });
+    res.status(200).json(userExercises);
+  } catch (error) {
+    console.error('Error retrieving user routine:', error);
     res.status(500).json({ error: error.message });
   }
 };

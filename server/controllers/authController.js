@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const UserInfo = require('../models/UserInfo');
 require('dotenv').config();
 
 exports.register = async (req, res) => {
@@ -27,10 +26,6 @@ exports.register = async (req, res) => {
       return res.status(400).json({ error: 'Username already exists' });
     }
 
-    if (username == 'testadmin') {
-      await User.update({ isAdmin: true }, { where: { id: user.id } });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       username,
@@ -38,19 +33,15 @@ exports.register = async (req, res) => {
       password: hashedPassword
     });
 
-    await UserInfo.create({
-      userId: user.id,
-      gender,
-      age,
-      weight,
-      height,
-      bodyFatPercent,
-      muscleMassPercent,
-      goalWeight,
-      goalBodyFatPercent,
-      goalMuscleMassPercent,
+    if (username == 'testadmin') {
+      await User.update({ isAdmin: true }, { where: { id: user.id } });
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
     });
-    res.status(201).json(user);
+
+    res.json({ token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

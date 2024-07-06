@@ -1,5 +1,5 @@
 const Exercise = require('../models/Exercise');
-const RoutineExercise = require('../models/RoutineExercise');
+const Routine = require('../models/Routine');
 const User = require('../models/User');
 
 exports.logExercise = async (req, res) => {
@@ -46,17 +46,3 @@ exports.getExercises = async (req, res) => {
   }
 };
 
-exports.getUserRoutine = async (req, res) => {
-  const userId = req.user.id;
-
-  try {
-    const userExercises = await RoutineExercise.findAll({
-      where: { userId },
-      include: [{ model: Exercise }],
-    });
-    res.status(200).json(userExercises);
-  } catch (error) {
-    console.error('Error retrieving user routine:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
