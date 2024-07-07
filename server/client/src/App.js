@@ -1,15 +1,23 @@
 import React from 'react';
 import './App.css';
-import ForgotPassword from './info';
+import GetInformation from './info';
+import ForgotPassword from './forgetPassword';
+import Login from './login';
+import NotFound from './notFound';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './home'
+import Analytics from './dashboard/Analytics';
+import Register from './register'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ForgotPassword />} />
-        <Route path="/goal" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Analytics />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/getinformation" element={<GetInformation />} />
+        <Route path="/notfound" element={<NotFound />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );

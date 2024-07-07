@@ -30,7 +30,7 @@ const ContentBox = styled("div")(({ theme }) => ({
   background: theme.palette.background.default
 }));
 
-export default function ForgotPassword() {
+export default function GetInformation() {
   const [inputValue, setInputValue] = useState('0');
   const navigate = useNavigate(); 
 
@@ -44,7 +44,7 @@ export default function ForgotPassword() {
   };
 
   const move = () => {
-    navigate('/Goal');
+    navigate('/');
   }
 
   return (
@@ -176,6 +176,7 @@ export default function ForgotPassword() {
                   fullWidth
                   color="primary"
                   variant="outlined"
+                  onClick={() => navigate('/')}
                   sx={{ mt: 2 }}>
                   Skip for now
                 </Button>
