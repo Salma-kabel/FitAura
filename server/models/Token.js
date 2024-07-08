@@ -1,23 +1,28 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Routine = sequelize.define(
-  'Routine',
+const Token = sequelize.define(
+  'Token',
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
-      type: DataTypes.STRING,
+    code: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      unique: true,
+    },
+    expiresAt: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },
   {
-    tableName: 'routines',
+    tableName: 'tokens',
     timestamps: true,
   }
 );
 
-module.exports = Routine;
+module.exports = Token;

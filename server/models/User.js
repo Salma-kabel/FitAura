@@ -51,25 +51,9 @@ const User = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    goalWeight: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    goalBodyFatPercent: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    goalMuscleMassPercent: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
+    tableName: 'users',
     timestamps: true,
   }
 );

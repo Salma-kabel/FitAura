@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Routine = sequelize.define(
-  'Routine',
+const Goal = sequelize.define(
+  'Goal',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,11 +13,19 @@ const Routine = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    currentValue: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    goalValue: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
-    tableName: 'routines',
+    tableName: 'goals',
     timestamps: true,
   }
 );
 
-module.exports = Routine;
+module.exports = Goal;
