@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protected');
@@ -44,6 +45,7 @@ Exercise.belongsTo(Routine, { foreignKey: 'routineId', as: 'routine' });
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
