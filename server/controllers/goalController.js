@@ -86,6 +86,33 @@ exports.viewProgress = async (req, res) => {
   }
 };
 
-exports.viewGoals = async (req, res) => {};
+exports.viewGoals = async (req, res) => {
+  const user = req.user;
+  const userId = user.id;
+  try {
+    const goals = await Goal.findAll({ where: { userId } });
+    if (!goals) {
+      return res.status(404).json({ error: "Goals not found" });
+    }
+    res.status(200).json(goals);
+  } catch (error) {
+    console.error("Error retrieving goals", error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
-exports.viewGoal = async (req, res) => {};
+exports.viewGoal = async (req, res) => {
+  const user = req.user;
+  const userId = user.id;
+  const goalId = req.params.id;
+  try {
+    const goal = await Goal.findOne({ where: { id: goalId, userId } });
+    if (!goal) {
+      return res.status(404).json({ error: "Goal not found" });
+    }
+    res.status(200).json(goal);
+  } catch (error) {
+    console.error("Error retrieving goal", error);
+    res.status(500).json({ error: error.message });
+  }
+};
