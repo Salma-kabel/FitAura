@@ -2,10 +2,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import axios from "../../axios";
 import { MatxLoading } from "app/components";
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../../models/User');
-require('dotenv').config();
 
 const initialState = {
   user: null,
@@ -60,22 +56,14 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, username, password) => {
     try {
-      console.log("tryingggggggggggg");
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      if (await User.findOne({ where: { email } })) {
-        console.log("error");
-        return 0;
-      } else if (await User.findOne({ where: { username } })) {
-        console.log("succcccesssss");
-        return 0;
-      }
-      console.log("succccessssss");
-      const user = await User.create({ username, email, password: hashedPassword });
-      console.log("succccessssss",user);
-    } catch (error) {
-      console.log("error");
-        return 0;
+      const response = await axios.post("/auth/register", { email, username, password });
+      const { user, token } = response.data;
+
+      localStorage.setItem("token", token);
+
+      dispatch({ type: "REGISTER", payload: { user } });
+    } catch (err) {
+      console.error("Registration error:", err);
     }
   };
 

@@ -1,0 +1,30 @@
+.sideNavigation {
+    transition: 0.3s;
+    background-color: blueviolet;
+    height: 100vh;
+}
+.Home {
+    display: flex;
+}
+.home-content {
+    flex-grow: 1;
+    background-color: #fbfafb;
+}
+.platform {
+    display: flex;
+}
+.platform-info {
+    /* width: 60%; */
+    flex-grow: 1;
+    margin-left: 20px;
+}
+.platform-info .info {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.platform-addons {
+    width: 40%;
+    border: 1px solid black;
+    /* flex-grow: 1; */
+}
