@@ -18,7 +18,7 @@ export default function DoughnutChart({ height, color = [] }) {
 
     series: [
       {
-        name: "Traffic Rate",
+        name: "Workout",
         type: "pie",
         radius: ["45%", "72.55%"],
         center: ["50%", "50%"],
@@ -40,9 +40,8 @@ export default function DoughnutChart({ height, color = [] }) {
         },
         labelLine: { normal: { show: false } },
         data: [
-          { value: 65, name: "Google" },
-          { value: 20, name: "Facebook" },
-          { value: 15, name: "Others" }
+          { value: 70, name: "Done" },
+          { value: 30, name: "Not Yet" },
         ],
         itemStyle: {
           emphasis: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: "rgba(0, 0, 0, 0.5)" }

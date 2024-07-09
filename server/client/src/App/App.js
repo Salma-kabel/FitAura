@@ -6,6 +6,7 @@ import Login from "../pages/auth/login";
 import ForgotPassword from "../pages/auth/forgetPassword";
 import NotFound from "../pages/auth/notFound";
 import GetInformation from "../pages/user/info";
+import ResetPassword from "../pages/auth/resetPassword"
 
 
 
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/getinformation" element={<GetInformation />} />
           <Route path="/notfound" element={<NotFound />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
         </Routes>
       </BrowserRouter>
   );

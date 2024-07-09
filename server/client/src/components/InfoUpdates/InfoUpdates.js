@@ -3,7 +3,7 @@ import './InfoUpdates.css';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 
-export default function InfoUpdates({icon, title, statistics, pageLink}) {
+export default function InfoUpdates({icon, title, pageLink}) {
     return(
         <div className="info-updates">
             <div className="sec-icon">
@@ -11,7 +11,6 @@ export default function InfoUpdates({icon, title, statistics, pageLink}) {
             </div>
             <div className="discription">
                 <span className="card-title">{title}</span>
-                <span className="card-statistics">{statistics}</span>
             </div>
             <div className="view-details">
                 <a href={pageLink}><FontAwesomeIcon icon={fas.faArrowRight} /></a>

@@ -11,20 +11,17 @@ function User({ userName }) {
     );
 }
 
-export default function NavBar() {
+export default function NavBar({name}) {
     return (
         <div className="navigation-bar">
             <div className="profile-icons">
                 <FontAwesomeIcon className="icon burgerIcon" icon={fas.faBars} />
-                <FontAwesomeIcon className="icon" icon={fas.faEnvelope} />
-                <FontAwesomeIcon className="icon" icon={fas.faWindowRestore} />
                 <FontAwesomeIcon className="icon" icon={fas.faStar} />
             </div>
             <div className="general-icons">
                 <FontAwesomeIcon className="icon" icon={fas.faMagnifyingGlass} />
                 <FontAwesomeIcon className="icon" icon={fas.faBell} />
-                <FontAwesomeIcon className="icon" icon={fas.faCartShopping} />
-                <User userName="MAHMOUD"/>
+                <User userName={name}/>
             </div>
         </div>
     );

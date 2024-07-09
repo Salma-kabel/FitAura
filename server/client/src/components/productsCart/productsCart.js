@@ -31,14 +31,14 @@ const productList = [
 export default function ProductsCart() {
     return(
         <div className="products-cart">
-            <h1>Top Selling Products</h1>
+            <h1>Your Routines</h1>
             <table>
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Revenue</th>
-                        <th>Stock Status</th>
-                        <th>Action</th>
+                        <th>Exercises Count</th>
+                        <th>Edit</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>

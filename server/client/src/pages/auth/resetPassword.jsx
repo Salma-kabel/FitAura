@@ -29,22 +29,23 @@ const ContentBox = styled("div")(({ theme }) => ({
   background: theme.palette.background.default
 }));
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("admin@example.com");
+  const [newpassword, setNpassone] = useState();
+  const [newpasswordagain, setNpasstwo] = useState();
 
-  const handleFormSubmit = async (email) => {
+  const handleFormSubmit = async (newpassword) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/request-reset-password', {
+      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(email),
+          body: JSON.stringify(newpassword),
         });
         const data = await response.json();
         console.log(data);
-        navigate('/resetpassword');
+        navigate('/login');
       } catch (error) {
         console.error('Error requesting password reset:', error);
         navigate('/notfound');
@@ -63,27 +64,28 @@ export default function ForgotPassword() {
             <ContentBox>
               <form onSubmit={handleFormSubmit}>
                 <TextField
-                  type="email"
-                  name="email"
+                  type="newpassword"
+                  name="newpassword"
                   size="small"
-                  label="Email"
-                  value={email}
+                  label="New Password"
+                  value={newpassword}
                   variant="outlined"
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setNpassone(e.target.value)}
+                  sx={{ mb: 3, width: "100%" }}
+                />
+                <TextField
+                  type="newpasswordagain"
+                  name="newpasswordagain"
+                  size="small"
+                  label="Enter New Password Again"
+                  value={newpasswordagain}
+                  variant="outlined"
+                  onChange={(e) => setNpasstwo(e.target.value)}
                   sx={{ mb: 3, width: "100%" }}
                 />
 
                 <Button fullWidth variant="contained" color="primary" type="submit">
-                  Reset Password
-                </Button>
-
-                <Button
-                  fullWidth
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => navigate('/login')}
-                  sx={{ mt: 2 }}>
-                  Go Back
+                  Submit
                 </Button>
               </form>
             </ContentBox>

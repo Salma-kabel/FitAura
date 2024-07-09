@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Grid, styled, TextField } from "@mui/material";
-
+import { useLocation } from "react-router-dom";
 
 const StyledRoot = styled("div")(() => ({
   display: "flex",
@@ -33,6 +33,8 @@ const ContentBox = styled("div")(({ theme }) => ({
 export default function GetInformation() {
   const [inputValue, setInputValue] = useState('0');
   const navigate = useNavigate(); 
+  const location = useLocation();
+  const { email } = location.state || {}; 
 
   const handleFormSubmit = () => {
     console.log(inputValue);
@@ -42,9 +44,9 @@ export default function GetInformation() {
       setInputValue(event.target.value);
     }
   };
-
+  console.log(email);
   const move = async () => {
-    navigate("/");
+    navigate("/", { state: { email: email } });
   }
 
   return (
