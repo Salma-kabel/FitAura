@@ -23,6 +23,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    EmailConfirmed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
@@ -51,25 +55,9 @@ const User = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    goalWeight: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    goalBodyFatPercent: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    goalMuscleMassPercent: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
+    tableName: 'users',
     timestamps: true,
   }
 );

@@ -1,69 +1,65 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+require('dotenv').config();
 
 exports.updateUser = async (req, res) => {
-  const userId = req.user.id;
-  const {
-    gender, age, weight, height, bodyFatPercent, muscleMassPercent,
-    goalWeight, goalBodyFatPercent, goalMuscleMassPercent
-  } = req.body;
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+  const user = req.user;
+  const {username, email, password} = req.body;
+  const attributes = [
+    "email",
+    "username",
+    "gender",
+    "age",
+    "weight",
+    "height",
+    "bodyFatPercent",
+    "muscleMassPercent",
+    "goalWeight",
+    "goalBodyFatPercent",
+    "goalMuscleMassPercent",
+  ];
 
-    user.gender = gender || user.gender;
-    user.age = age || user.age;
-    user.weight = weight || user.weight;
-    user.height = height || user.height;
-    user.bodyFatPercent = bodyFatPercent || user.bodyFatPercent;
-    user.muscleMassPercent = muscleMassPercent || user.muscleMassPercent;
-    user.goalWeight = goalWeight || user.goalWeight;
-    user.goalBodyFatPercent = goalBodyFatPercent || user.goalBodyFatPercent;
-    user.goalMuscleMassPercent = goalMuscleMassPercent || user.goalMuscleMassPercent;
+  try {
+    if (await User.findOne({ where: { email } })) {
+      return res.status(400).json({ error: 'Email already exists' });
+    } else if (await User.findOne({ where: { username } })) {
+      return res.status(400).json({ error: 'Username already exists' });
+    }
+    attributes.forEach((attribute) => {
+      if (req.body[attribute] !== undefined) {
+        user[attribute] = req.body[attribute];
+      }
+    });
 
     await user.save();
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error updating user information:', error);
+    console.error('Error updating user information', error);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.getUser = async (req, res) => {
-  const userId = req.user.id;
+  const user = req.user;
 
   try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
     res.status(200).json(user);
   } catch (error) {
-    console.error('Error getting user information:', error);
+    console.error('Error getting user information', error);
     res.status(500).json({ error: error.message });
   }
 };
 
-exports.getProgress = async (req, res) => {
-  const userId = req.user.id;
+exports.deleteUser = async (req, res) => {
+  const user = req.user;
+  const userId = user.id;
 
   try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    const progress = {
-      weightProgress: user.goalWeight ? ((user.weight - user.goalWeight) / (user.goalWeight) * 100).toFixed(2) : null,
-      bodyFatPercentProgress: user.goalBodyFatPercent ? ((user.bodyFatPercent - user.goalBodyFatPercent) / (user.goalBodyFatPercent) * 100).toFixed(2) : null,
-      muscleMassPercentProgress: user.goalMuscleMassPercent ? ((user.muscleMassPercent - user.goalMuscleMassPercent) / (user.goalMuscleMassPercent) * 100).toFixed(2) : null
-    };
-
-    res.status(200).json(progress);
+    await User.destroy({where: { id: userId }});
+    res.status(200).json({ Success: 'User deleted successfully' });
   } catch (error) {
-    console.error('Error getting user progress:', error);
+    console.error('Error deleting user information', error);
     res.status(500).json({ error: error.message });
   }
 };
