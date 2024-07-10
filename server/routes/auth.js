@@ -1,11 +1,21 @@
 const express = require('express');
-const { register, login } = require('../controllers/userController');
+const {
+  register,
+  login,
+  requestPasswordReset,
+  resetPassword,
+} = require('../controllers/authController');
+const { validate } = require('../middlewares/validation');
 
 const router = express.Router();
 
 router.post('/register', validate('register'), register);
 router.post('/login', validate('login'), login);
-router.post('/request-reset-password', validate('requestPasswordReset'), requestPasswordReset);
+router.post(
+  '/request-reset-password',
+  validate('requestPasswordReset'),
+  requestPasswordReset
+);
 router.post('/reset-password', validate('resetPassword'), resetPassword);
 
 module.exports = router;
