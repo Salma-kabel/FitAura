@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
-const { sendEmail } = require('../utils/mailer');
+const { sendEmail } = require('../services/emailService');
 require('dotenv').config();
 
 exports.register = async (req, res) => {
@@ -25,14 +25,14 @@ exports.register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      isAdmin: username == 'testadmin'? true : false,
+      isAdmin: username == 'testadmin' ? true : false,
     });
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    await sendEmail(email, token, 'reset-password');
+    await sendEmail(email, token, 'confirm-email');
 
     res.status(201).json({ message: 'Email Confirmation sent' });
   } catch (error) {
@@ -60,7 +60,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.status(200).setheader('authorization', `Bearer ${token}`);
+    res.status(200).setheader('Authorization', `Bearer ${token}`);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -68,7 +68,7 @@ exports.login = async (req, res) => {
 
 exports.confirmEmail = async (req, res) => {
   try {
-    const { token } = req.params.token;
+    let { token } = req.params.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.userId);
@@ -79,7 +79,10 @@ exports.confirmEmail = async (req, res) => {
     user.emailConfirmed = true;
     await user.save();
 
-    res.json({ message: 'Email Confirmed successfully' });
+    token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+    res.status(200).setheader('Authorization', `Bearer ${token}`);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -95,9 +98,13 @@ exports.requestPasswordReset = async (req, res) => {
   try {
     const { password } = req.body;
 
-    const token = jwt.sign({ user: `${user.id} ${password}` }, process.env.JWT_SECRET, {
-      expiresIn: process.env.RESET_PASSWORD_EXPIRATION,
-    });
+    const token = jwt.sign(
+      { user: `${user.id} ${password}` },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.RESET_PASSWORD_EXPIRATION,
+      }
+    );
 
     await sendEmail(user.email, token, 'reset-password');
 
@@ -133,7 +140,7 @@ exports.resetPassword = async (req, res) => {
 
     res
       .status(200)
-      .setheader('authorization', `Bearer ${token}`)
+      .setheader('Authorization', `Bearer ${token}`)
       .json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
