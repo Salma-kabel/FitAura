@@ -4,8 +4,10 @@ const {
   login,
   requestPasswordReset,
   resetPassword,
+  confirmEmail,
 } = require('../controllers/authController');
 const { validate } = require('../middlewares/validation');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
@@ -14,8 +16,10 @@ router.post('/login', validate('login'), login);
 router.post(
   '/request-reset-password',
   validate('requestPasswordReset'),
+  authMiddleware,
   requestPasswordReset
 );
-router.post('/reset-password', validate('resetPassword'), resetPassword);
+router.get('/reset-password:token', resetPassword);
+router.get('/confirm-email/:token', confirmEmail);
 
 module.exports = router;

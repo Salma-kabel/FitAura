@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
-const { sendResetPasswordEmail } = require('../utils/mailer');
+const { sendEmail } = require('../utils/mailer');
 require('dotenv').config();
 
 exports.register = async (req, res) => {
@@ -25,17 +25,14 @@ exports.register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      isAdmin: username == 'testadmin'? true : false,
     });
-
-    if (username == 'testadmin') {
-      await User.update({ isAdmin: true }, { where: { id: user.id } });
-    }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    await sendResetPasswordEmail(email, token);
+    await sendEmail(email, token, 'reset-password');
 
     res.status(201).json({ message: 'Email Confirmation sent' });
   } catch (error) {
@@ -57,24 +54,21 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    if (!user.emailConfirmed) {
+      return res.status(401).json({ error: 'Email not confirmed' });
+    }
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-
     res.status(200).setheader('authorization', `Bearer ${token}`);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-exports.verifyEmail = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
+exports.confirmEmail = async (req, res) => {
   try {
-    const { token, password } = req.body;
+    const { token } = req.params.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.userId);
@@ -82,33 +76,30 @@ exports.verifyEmail = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
+    user.emailConfirmed = true;
     await user.save();
 
-    res.json({ message: 'Password reset successfully' });
+    res.json({ message: 'Email Confirmed successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.requestPasswordReset = async (req, res) => {
+  const user = req.user;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   try {
-    const { email } = req.body;
+    const { password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+    const token = jwt.sign({ user: `${user.id} ${password}` }, process.env.JWT_SECRET, {
+      expiresIn: process.env.RESET_PASSWORD_EXPIRATION,
+    });
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.RESET_PASSWORD_EXPIRATION });
-
-    await sendResetPasswordEmail(email, token);
+    await sendEmail(user.email, token, 'reset-password');
 
     res.json({ message: 'Reset password email sent' });
   } catch (error) {
@@ -123,10 +114,11 @@ exports.resetPassword = async (req, res) => {
   }
 
   try {
-    const { token, password } = req.body;
+    let token = req.params.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findByPk(decoded.userId);
+    const [userId, password] = decoded.user.split(' ');
+    const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -135,7 +127,14 @@ exports.resetPassword = async (req, res) => {
     user.password = hashedPassword;
     await user.save();
 
-    res.json({ message: 'Password reset successfully' });
+    token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res
+      .status(200)
+      .setheader('authorization', `Bearer ${token}`)
+      .json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

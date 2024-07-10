@@ -26,16 +26,11 @@ exports.updateUser = async (req, res) => {
     } else if (await User.findOne({ where: { username } })) {
       return res.status(400).json({ error: 'Username already exists' });
     }
-    const hashedPassword = password
-      ? await bcrypt.hash(password, 10)
-      : password;
-
     attributes.forEach((attribute) => {
       if (req.body[attribute] !== undefined) {
         user[attribute] = req.body[attribute];
       }
     });
-    user.password = hashedPassword || user.password;
 
     await user.save();
     res.status(200).json(user);

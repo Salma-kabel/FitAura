@@ -66,13 +66,5 @@ exports.validate = (method) => {
     case 'requestPasswordReset': {
       return [body('email').isEmail().withMessage('Invalid email')];
     }
-    case 'resetPassword': {
-      return [
-        body('password')
-          .isLength({ min: 6 })
-          .withMessage('Password must be at least 6 characters long'),
-        body('token').not().isEmpty().withMessage('Token is required'),
-      ];
-    }
   }
 };
