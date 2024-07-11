@@ -41,26 +41,31 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+  console.log("here");
   const errors = validationResult(req);
+  console.log("here1");
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   try {
+    console.log("here2");
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
-    if (!user.emailConfirmed) {
+    console.log("here3");
+    if (!user.EmailConfirmed) {
       return res.status(401).json({ error: 'Email not confirmed' });
     }
+    console.log("here4");
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.status(200).setheader('Authorization', `Bearer ${token}`);
+    console.log("here5");
+    res.status(200).send({ authorization: 'Bearer ${token}' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -68,7 +73,7 @@ exports.login = async (req, res) => {
 
 exports.confirmEmail = async (req, res) => {
   try {
-    let { token } = req.params.token;
+    let token = req.query.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.userId);
@@ -76,13 +81,13 @@ exports.confirmEmail = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    user.emailConfirmed = true;
+    user.EmailConfirmed = true;
     await user.save();
 
     token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.status(200).setheader('Authorization', `Bearer ${token}`);
+    res.status(200).setHeader('Authorization', `Bearer ${token}`).json({'message': 'Email confirmed'});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
