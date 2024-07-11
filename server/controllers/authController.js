@@ -68,7 +68,7 @@ exports.login = async (req, res) => {
 
 exports.confirmEmail = async (req, res) => {
   try {
-    let { token } = req.params.token;
+    let token = req.query.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.userId);
@@ -82,20 +82,20 @@ exports.confirmEmail = async (req, res) => {
     token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.status(200).setheader('Authorization', `Bearer ${token}`);
+    res.status(200).setHeader('Authorization', `Bearer ${token}`).json({'message': 'Email confirmed'});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.requestPasswordReset = async (req, res) => {
-  const user = req.user;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   try {
+    const user = req.user;
     const { password } = req.body;
 
     const token = jwt.sign(
@@ -115,13 +115,8 @@ exports.requestPasswordReset = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
-    let token = req.params.token;
+    let token = req.query.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const [userId, password] = decoded.user.split(' ');

@@ -19,7 +19,7 @@ router.post(
   authMiddleware,
   requestPasswordReset
 );
-router.get('/reset-password:token', resetPassword);
-router.get('/confirm-email/:token', confirmEmail);
+router.get('/reset-password', resetPassword);
+router.get('/confirm-email', confirmEmail);
 
 module.exports = router;
