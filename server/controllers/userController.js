@@ -4,8 +4,8 @@ const User = require('../models/User');
 require('dotenv').config();
 
 exports.updateUser = async (req, res) => {
-  const user = req.user;
-  const {username, email, password} = req.body;
+  const id = req.body.id;
+  const user = await User.findOne({ where: { id: id } });
   const attributes = [
     "email",
     "username",
@@ -13,6 +13,7 @@ exports.updateUser = async (req, res) => {
     "age",
     "weight",
     "height",
+    "waterpercent",
     "bodyFatPercent",
     "muscleMassPercent",
     "goalWeight",
@@ -21,11 +22,6 @@ exports.updateUser = async (req, res) => {
   ];
 
   try {
-    if (await User.findOne({ where: { email } })) {
-      return res.status(400).json({ error: 'Email already exists' });
-    } else if (await User.findOne({ where: { username } })) {
-      return res.status(400).json({ error: 'Username already exists' });
-    }
     attributes.forEach((attribute) => {
       if (req.body[attribute] !== undefined) {
         user[attribute] = req.body[attribute];
@@ -41,8 +37,8 @@ exports.updateUser = async (req, res) => {
 };
 
 exports.getUser = async (req, res) => {
-  const user = req.user;
-
+  const id = req.body.id;
+  const user = await User.findOne({ where: { id: id } });
   try {
     res.status(200).json(user);
   } catch (error) {

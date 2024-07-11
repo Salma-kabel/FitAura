@@ -49,9 +49,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// app.get('/', (req, res) => {
-//   res.redirect('/api/dashboard');
-// });
+app.get('/', (req, res) => {
+  res.redirect('http://localhost:3000/login');
+});
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
 app.use('/api/exercises', exerciseRoutes);

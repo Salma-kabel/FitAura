@@ -41,31 +41,34 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  console.log("here");
   const errors = validationResult(req);
-  console.log("here1");
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   try {
-    console.log("here2");
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-    console.log("here3");
     if (!user.EmailConfirmed) {
       return res.status(401).json({ error: 'Email not confirmed' });
     }
-    console.log("here4");
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, email: user.email, username: user.username },
+      process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    console.log("here5");
-    res.status(200).send({ authorization: 'Bearer ${token}' });
+    res.status(200).send({ authorization: `Bearer ${token}`,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        weight: user.weight,
+        bodyfat: user.bodyfat,
+        bodymuscle: user.muscleMassPercent,
+      }, });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
