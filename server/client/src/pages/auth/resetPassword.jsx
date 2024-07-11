@@ -48,7 +48,7 @@ export default function ResetPassword() {
         navigate('/login');
       } catch (error) {
         console.error('Error requesting password reset:', error);
-        navigate('/notfound');
+        navigate('/resetpassword');
       }
   };
 

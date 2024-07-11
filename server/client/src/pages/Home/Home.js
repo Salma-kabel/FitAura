@@ -8,10 +8,12 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import LineChart from "../charts/LineChart"
 import LineChart2 from "../charts/LineChart2";
-import DoughnutChart from "../charts/Doughnut";
+// import DoughnutChart from "../charts/Doughnut";
 import './Home.css';
 import React, { useState } from "react";
-import PopUpPage from '../../components/popUpPage/popUpPage';
+import PopUpPage, { choosedExersices } from '../../components/popUpPage/popUpPage';
+
+
 
 const infoCardsList = [
     {
@@ -33,8 +35,16 @@ export default function Home() {
     const [isPopUpVisible, setIsPopUpVisible] = useState(false);
 
     const handleClick = () => {
-        // setIsPopUpVisible(!isPopUpVisible);
+        // setIsPopUpVisible(isPopUpVisible);
         setIsPopUpVisible(!isPopUpVisible);
+    };
+
+    const handleSubmitRoutine = () => {
+        // setIsPopUpVisible(isPopUpVisible);
+        setIsPopUpVisible(!isPopUpVisible);
+
+        console.log(`Routine: ${document.querySelector(".input-routine-name").value}`)
+        console.log(`These exercise will be added: ${choosedExersices}`);
     };
 
     const { palette } = useTheme();
@@ -45,27 +55,31 @@ export default function Home() {
             <SideNav />
             <div className="home-content">
             {isPopUpVisible && (
-                    <PopUpPage handleLink = {handleClick}/>
+                    <PopUpPage handleLink = {handleClick} handleSubmitRoutine = {handleSubmitRoutine}/>
             )}
                 <NavBar name={email}/>
                 <div className="platform">
                     <div className="platform-info">
-                        <section>
-                            <h2>Weight</h2>
+
+                        <section className="charts">
+
                             <div className="weight-chart">
+                                <h2>Weight</h2>
                                 <LineChart 
                                     height="300px"
                                     color={[palette.primary.dark]}
                                 />
                             </div>
+
                             <div className="muscle-chart">
-                            <h2>Muscle And Fat Percentage</h2>
+                                <h2>Muscle And Fat Percentage</h2>
                                 <LineChart2 
                                     height="300px"
                                     color={[palette.primary.dark, palette.primary.light]}
                                 />
                             </div>
                         </section>
+
                         <section className="info">
                             {
                                 infoCardsList.map(({id, icon, title, pageLink}) => {
@@ -81,17 +95,9 @@ export default function Home() {
                                 })
                             }
                         </section>
+
                         <section className="products-table">
                             <ProductsCart />
-                        </section>
-                    </div>
-                    <div className="platform-addons">
-                        <section className = "home-chart">
-                        <h1 className="pie">Today's Workout</h1>
-                            <DoughnutChart
-                                height= "300px"
-                                color= {[palette.primary.dark, palette.primary.light]}
-                            />
                         </section>
                     </div>
                 </div>

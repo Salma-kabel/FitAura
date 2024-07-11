@@ -1,17 +1,8 @@
-* {
-    z-index: 0;
-}
-.sideNavigation {
-    transition: 0.3s;
-    background-color: blueviolet;
-    height: 100vh;
-}
 .Home {
     display: flex;
-    /* position: relative; */
 }
 .home-content {
-    flex-grow: 1;
+    width: 100%;
     background-color: #fbfafb;
 }
 .home-chart {
@@ -23,23 +14,29 @@
     display: flex;
 }
 .platform-info {
-    width: 60%;
+    width: 100%;
     margin-left: 20px;
 }
 .platform-info .info {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
 }
-.platform-addons {
-    width: 40%;
+.charts {
+    display: flex;
+    width: 100%;
 }
-.pie {
+.weight-chart,
+.muscle-chart {
+    width: 50%;
     text-align: center;
 }
-
 @media (max-width: 767px) {
-    .platform {
+    .charts {
         flex-direction: column;
+    }
+    .weight-chart,
+    .muscle-chart {
+        width: 100%;
     }
 }

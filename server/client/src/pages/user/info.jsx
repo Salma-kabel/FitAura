@@ -36,8 +36,22 @@ export default function GetInformation() {
   const location = useLocation();
   const { email } = location.state || {}; 
 
-  const handleFormSubmit = () => {
-    console.log(inputValue);
+  const handleFormSubmit = async () => {
+    // try {
+    //   const response = await fetch('http://localhost:5000//api/user', {
+    //       method: 'PUT',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify(values),
+    //     });
+    //     const data = await response.json();
+    //     console.log(data);
+    //     navigate('/api/dashboard');
+    //   } catch (error) {
+    //     setLoading(false);
+    //     console.error('Error updating information:', error);
+    //   }
   };
   const handleInputChange = (event) => {
     if (event.target.value >= 0 && event.target.value <= 100) {

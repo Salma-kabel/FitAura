@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import './SideNav.css'
 
 
-
-
 export default function SideNav() {
 
 
@@ -12,13 +10,11 @@ export default function SideNav() {
         const burgerIcon = document.querySelector('.burgerIcon');
         const sideNav = document.querySelector('.sideNavigation');
         const handleClick = () => {
-            console.log(sideNav.style.width);
             if (sideNav.style.width === "20%") {
                 sideNav.style.width = "0";
             } else {
                 sideNav.style.width = "20%";
             }
-            
         };
 
         if (burgerIcon) {

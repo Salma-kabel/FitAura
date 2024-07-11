@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Card, Checkbox, Grid, TextField, Box, styled, useTheme } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Formik } from "formik";
+import loginPageImg from './loginPageImg.png'
 import * as Yup from "yup";
 
 import { Paragraph } from "../../components/Typography";
@@ -24,14 +25,14 @@ const StyledRoot = styled("div")(() => ({
   alignItems: "center",
   justifyContent: "center",
   backgroundColor: "#1A2038",
-  minHeight: "100% !important",
+  minHeight: "100vh !important",
   "& .card": {
     maxWidth: 800,
     minHeight: 400,
     margin: "1rem",
     display: "flex",
     borderRadius: 12,
-    alignItems: "center"
+    alignItems: "center",
   },
 
   ".img-wrapper": {
@@ -76,10 +77,13 @@ export default function Login() {
           body: JSON.stringify(values),
         });
         if (response.status === 401) {
-          navigate('/notfound');
-        } else if (response.status === 200) {
-          const data = await response.json();
-          console.log(data);
+          navigate('/login');
+        } else if (response.status < 300) {
+          const auth = response.headers.authorization;
+          console.log(auth, response.headers)
+          const token = auth.split(" ")[1];
+          localStorage.setItem('authToken', token);
+          console.log(token);
 
           navigate('/getinformation', { state: { email: "salma" } });
         } else {
@@ -88,7 +92,7 @@ export default function Login() {
       } catch (error) {
         setLoading(false);
         console.error('Error in login:', error);
-        navigate('/notfound');
+        navigate('/login');
       }
   };
 
@@ -98,7 +102,7 @@ export default function Login() {
         <Grid container>
           <Grid item sm={6} xs={12}>
             <div className="img-wrapper">
-              <img src="/assets/images/illustrations/dreamer.svg" width="100%" alt="" />
+              <img src={loginPageImg} width="100%" alt="login-page-svg" />
             </div>
           </Grid>
 
