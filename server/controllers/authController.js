@@ -53,14 +53,22 @@ exports.login = async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
-    if (!user.emailConfirmed) {
+    if (!user.EmailConfirmed) {
       return res.status(401).json({ error: 'Email not confirmed' });
     }
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, email: user.email, username: user.username },
+      process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.status(200).setheader('Authorization', `Bearer ${token}`);
+    res.status(200).send({ authorization: `Bearer ${token}`,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        weight: user.weight,
+        bodyfat: user.bodyfat,
+        bodymuscle: user.muscleMassPercent,
+      }, });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -76,13 +84,17 @@ exports.confirmEmail = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    user.emailConfirmed = true;
+    user.EmailConfirmed = true;
     await user.save();
 
     token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
+<<<<<<< HEAD
     res.status(200).setHeader('Authorization', `Bearer ${token}`).json({'message': 'Email confirmed'});
+=======
+    res.status(200).setHeader('Authorization', `Bearer ${token}`).json({'message': 'Email confirmed'});
+>>>>>>> testfull
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
