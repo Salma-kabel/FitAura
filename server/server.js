@@ -14,6 +14,7 @@ const Routine = require('./models/Routine');
 const Exercise = require('./models/Exercise');
 const User = require('./models/User');
 const Goal = require('./models/Goal');
+const UserMetric = require('./models/UserMetric');
 
 User.hasMany(Routine, {
   foreignKey: 'userId',
@@ -34,6 +35,13 @@ User.hasMany(Goal, {
   onDelete: 'CASCADE',
 });
 Goal.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+User.hasMany(UserMetric, {
+  foreignKey: 'userId',
+  as: 'metrics',
+  onDelete: 'CASCADE',
+});
+UserMetric.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 Routine.hasMany(Exercise, {
   foreignKey: 'routineId',
