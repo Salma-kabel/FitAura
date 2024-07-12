@@ -5,6 +5,8 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Card, Checkbox, Grid, TextField, useTheme, Box, styled } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
+import RegistrationPhoto from './RegistrationPhoto.png'
+
 import * as Yup from "yup";
 
 
@@ -92,7 +94,7 @@ export default function Register() {
               <img
                 width="100%"
                 alt="Register"
-                src="posting_photo.svg"
+                src={RegistrationPhoto}
               />
             </ContentBox>
           </Grid>

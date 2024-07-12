@@ -14,7 +14,8 @@ export default function InfoUpdates({ icon, title, pageLink, handleLink }) {
                 <span className="card-title">{title}</span>
             </div>
             <div className="view-details">
-                <FontAwesomeIcon onClick={handleLink} icon={fas.faArrowRight} />
+                {pageLink ? <a href={pageLink}><FontAwesomeIcon icon={fas.faArrowRight} /></a>
+                : <FontAwesomeIcon onClick={handleLink} icon={fas.faArrowRight} />}
             </div>
         </div>
     );

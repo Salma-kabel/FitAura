@@ -3,7 +3,8 @@ import ReactEcharts from "echarts-for-react";
 
 export default function LineChart({ height, color = [], weight }) {
   const theme = useTheme();
-
+  let minm = weight? Math.min(...weight) - 20: 20;
+  let maxm = weight? Math.max(...weight) + 20: 100;
   const option = {
     grid: { top: "10%", bottom: "10%", left: "5%", right: "5%" },
     legend: {
@@ -33,8 +34,8 @@ export default function LineChart({ height, color = [], weight }) {
     },
     yAxis: {
       type: "value",
-      min: 20,
-      max: 200,
+      min: minm,
+      max: maxm,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
@@ -44,7 +45,7 @@ export default function LineChart({ height, color = [], weight }) {
     },
     series: [
       {
-        data: [weight],
+        data: weight,
         type: "line",
         stack: "weight",
         smooth: true,

@@ -1,85 +1,80 @@
+import React, { useState, useEffect } from "react";
 import NavBar from "../../components/NavBar/NavBar";
 import SideNav from "../../components/SideNav/SideNav";
 import InfoUpdates from '../../components/InfoUpdates/InfoUpdates';
-import ProductsCart from "../../components/productsCart/productsCart";
+import RoutinesTable from "../../components/RoutinesTable/RoutinesTable";
 import { useTheme } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
-import { useLocation } from "react-router-dom";
-import LineChart from "../charts/LineChart"
+import LineChart from "../charts/LineChart";
 import LineChart2 from "../charts/LineChart2";
 import { useSelector } from 'react-redux';
-// import DoughnutChart from "../charts/Doughnut";
 import './Home.css';
-import React, { useEffect, useState } from "react";
-import PopUpPage, { choosedExersices } from '../../components/popUpPage/popUpPage';
-
-
+import PopUpPage, { finalchoosedExercises } from '../../components/popUpPage/popUpPage';
 
 const infoCardsList = [
     {
         id: 1,
-        icon: (<FontAwesomeIcon icon={fas.faUserGroup}/>),
+        icon: (<FontAwesomeIcon icon={fas.faUserGroup} />),
         title: "Create New Routine",
-        // pageLink: "/heros",
     },
     {
         id: 2,
-        icon: (<FontAwesomeIcon icon={fas.faDollarSign}/>),
+        icon: (<FontAwesomeIcon icon={fas.faChildReaching} />),
         title: "Your Body Informaion",
-        // pageLink: "/comp",
+        pageLink: "/getinformation",
     },
 ];
 
 export default function Home() {
-
     const [isPopUpVisible, setIsPopUpVisible] = useState(false);
+    const [routines, setRoutines] = useState([]);
+
     const user = useSelector((state) => state.user);
+
+    useEffect(() => {
+        const storedRoutines = localStorage.getItem("Routines List");
+        if (storedRoutines) {
+            setRoutines(JSON.parse(storedRoutines));
+        }
+    }, []);
+
     const handleClick = () => {
-        // setIsPopUpVisible(isPopUpVisible);
         setIsPopUpVisible(!isPopUpVisible);
     };
-    // const Getuserdata = async () => {
-    //     const id = user.id;
-    //       try {
-    //           const res = await fetch("http://localhost:5000/api/user", {
-    //               method: 'POST',
-    //               headers: {
-    //                   'Content-Type': 'application/json',
-    //               },
-    //               body: JSON.stringify({id: id}),
-    //           });
-    //           usero = await res.json();
-    //       } catch (error) {
-    //           console.log(error);
-    //       }
-    // }
-    const handleSubmitRoutine = () => {
-        // setIsPopUpVisible(isPopUpVisible);
-        setIsPopUpVisible(!isPopUpVisible);
 
-        console.log(`Routine: ${document.querySelector(".input-routine-name").value}`)
-        console.log(`These exercise will be added: ${choosedExersices}`);
+    const handleSubmitRoutine = () => {
+        setIsPopUpVisible(!isPopUpVisible);
+        let newRoutineName = document.querySelector(".input-routine-name").value;
+
+        const newRoutine = {
+            id: routines.length ? routines[routines.length - 1].id + 1 : 1,
+            RoutineName: newRoutineName,
+            counts: finalchoosedExercises.length,
+            exercises: finalchoosedExercises
+        };
+
+        const updatedRoutines = [...routines, newRoutine];
+        setRoutines(updatedRoutines);
+        localStorage.setItem("Routines List", JSON.stringify(updatedRoutines));
     };
 
     const { palette } = useTheme();
-    
+
     return (
         <div className="Home">
             <SideNav />
             <div className="home-content">
-            {isPopUpVisible && (
-                    <PopUpPage handleLink = {handleClick} handleSubmitRoutine = {handleSubmitRoutine}/>
-            )}
-                <NavBar name={user?.username || 'Guest'}/>
+                {isPopUpVisible && (
+                    <PopUpPage handleLink={handleClick} handleSubmitRoutine={handleSubmitRoutine} />
+                )}
+                <NavBar name={user?.username || 'Guest'} />
                 <div className="platform">
                     <div className="platform-info">
-
                         <section className="charts">
-
                             <div className="weight-chart">
                                 <h2>Weight</h2>
-                                <LineChart 
+                                <LineChart
                                     height="300px"
                                     color={[palette.primary.dark]}
                                     weight={user.weight}
@@ -88,31 +83,28 @@ export default function Home() {
 
                             <div className="muscle-chart">
                                 <h2>Muscle And Fat Percentage</h2>
-                                <LineChart2 
+                                <LineChart2
                                     height="300px"
                                     color={[palette.primary.dark, palette.primary.light]}
+                                    muscle={user.bodymuscle}
+                                    fat={user.bodyfat}
                                 />
                             </div>
                         </section>
 
                         <section className="info">
-                            {
-                                infoCardsList.map(({id, icon, title, pageLink}) => {
-                                    return(
-                                        <InfoUpdates
-                                            key = {id}
-                                            icon = {icon}
-                                            title = {title}
-                                            pageLink={pageLink}
-                                            handleLink = {handleClick}
+                            {infoCardsList.map(({ id, icon, title, pageLink }) => (
+                                <InfoUpdates
+                                    key={id}
+                                    icon={icon}
+                                    title={title}
+                                    pageLink={pageLink}
+                                    handleLink={handleClick}
                                 />
-                                    );
-                                })
-                            }
+                            ))}
                         </section>
-
-                        <section className="products-table">
-                            <ProductsCart />
+                        <section className="RoutinesTable-organization">
+                            <RoutinesTable routines={routines} />
                         </section>
                     </div>
                 </div>

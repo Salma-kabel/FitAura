@@ -1,36 +1,51 @@
-import React from "react";
-import { useEffect } from "react";
-import './SideNav.css'
-
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartLine, faArrowRightToBracket, faAddressCard, faCodeCompare } from "@fortawesome/free-solid-svg-icons";
+import './SideNav.css';
 
 export default function SideNav() {
+    const [isOpen, setIsOpen] = useState(false);
 
+    const handleToggle = () => {
+        setIsOpen(!isOpen);
+    };
 
     useEffect(() => {
         const burgerIcon = document.querySelector('.burgerIcon');
-        const sideNav = document.querySelector('.sideNavigation');
-        const handleClick = () => {
-            if (sideNav.style.width === "20%") {
-                sideNav.style.width = "0";
-            } else {
-                sideNav.style.width = "20%";
-            }
-        };
-
         if (burgerIcon) {
-            burgerIcon.addEventListener("click", handleClick);
+            burgerIcon.addEventListener("click", handleToggle);
         }
-
         return () => {
             if (burgerIcon) {
-                burgerIcon.removeEventListener("click", handleClick);
+                burgerIcon.removeEventListener("click", handleToggle);
             }
         };
-    }, []);
+    });
 
-    return(
-        <div className="sideNavigation" style={{width: "0px"}}>
-            This is nav bar
+    return (
+        <div className={`sideNavigation ${isOpen ? 'open' : 'closed'}`}>
+            <div>
+                    <a  className="dashboard" href="/api/dashboard" target="_blank">
+                        <FontAwesomeIcon className = "sideNavButtons" icon={faChartLine} />
+                        Dashboard
+                    </a>
+
+                    <a className="login" href="/login" target="_blank">
+                        <FontAwesomeIcon className = "sideNavButtons" icon={faArrowRightToBracket} />
+                        Log in
+                    </a>
+
+                    <a className="register" href="/register" target="_blank">
+                        <FontAwesomeIcon className = "sideNavButtons" icon={faAddressCard} />
+                        Register
+                    </a>
+
+                    <a  className="" href="https://github.com/Salma-kabel/FitAura/tree/backend-dev" target="_blank" rel="noreferrer">
+                        <FontAwesomeIcon className = "sideNavButtons" icon={faCodeCompare} />
+                        Repository
+                    </a>
+
+            </div>
         </div>
     );
 }

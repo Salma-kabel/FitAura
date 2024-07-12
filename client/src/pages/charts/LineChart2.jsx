@@ -1,9 +1,10 @@
 import { useTheme } from "@mui/material/styles";
 import ReactEcharts from "echarts-for-react";
 
-export default function LineChart({ height, color = [] }) {
+export default function LineChart({ height, color = [], muscle, fat }) {
   const theme = useTheme();
-
+  let minm = (muscle | fat)? Math.min(...muscle, ...fat) - 10: 0;
+  let maxm = (muscle | fat)? Math.max(...muscle, ...fat) + 20: 100;
   const option = {
     grid: { top: "10%", bottom: "10%", left: "5%", right: "5%" },
     legend: {
@@ -33,6 +34,8 @@ export default function LineChart({ height, color = [] }) {
     },
     yAxis: {
       type: "value",
+      min: minm,
+      max: maxm,
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: {
@@ -42,7 +45,7 @@ export default function LineChart({ height, color = [] }) {
     },
     series: [
       {
-        data: [30, 40, 20, 50, 40, 80, 90],
+        data: muscle,
         type: "line",
         stack: "muscle",
         name: "Muscle",
@@ -51,7 +54,7 @@ export default function LineChart({ height, color = [] }) {
         lineStyle: { width: 4 }
       },
       {
-        data: [20, 50, 15, 50, 30, 70, 95],
+        data: fat,
         type: "line",
         stack: "fat",
         name: "Fat",

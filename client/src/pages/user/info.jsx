@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Formik } from "formik";
 import { Button, Card, Grid, styled, TextField } from "@mui/material";
@@ -46,7 +45,6 @@ const initialValues = {
 };
 
 export default function GetInformation() {
-  const [inputValue, setInputValue] = useState('0');
   const user = useSelector((state) => state.user);
   const navigate = useNavigate(); 
 
@@ -62,15 +60,26 @@ export default function GetInformation() {
           body: JSON.stringify(values),
         });
         const data = await response.json();
+        console.log(data);
+        if (!user.weight) {
+          user.weight = [data.weight];
+        } else {
+          user.weight.push(data.weight);
+        }
+        if (!user.bodymuscle) {
+          user.bodymuscle = [data.muscleMassPercent];
+        } else {
+          user.bodymuscle.push(data.muscleMassPercent);
+        }
+        if (!user.bodyfat) {
+          user.bodyfat = [data.bodyFatPercent];
+        } else {
+          user.bodyfat.push(data.bodyFatPercent);
+        }
         navigate('/api/dashboard');
       } catch (error) {
         console.error('Error updating information:', error);
       }
-  };
-  const handleInputChange = (event) => {
-    if (event.target.value >= 0 && event.target.value <= 100) {
-      setInputValue(event.target.value);
-    }
   };
   
   return (

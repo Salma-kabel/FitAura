@@ -49,14 +49,23 @@
     cursor: pointer;
 }
 .exercise-add-button {
-    color: rgb(54, 54, 54);
+    color: gray;
     font-size: 25px;
     position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
+    transition: color 0.3s ease;
 }
+.exercise-add-button.gray {
+    color: gray;
+}
+
+.exercise-add-button.green {
+    color: green;
+}
+
 .submit {
     border: none;
     padding: 15px 35px;

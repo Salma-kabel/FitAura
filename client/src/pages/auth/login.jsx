@@ -3,11 +3,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Card, Checkbox, Grid, TextField, Box, styled, useTheme } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Formik } from "formik";
-import loginPageImg from './loginPageImg.png'
+import loginPageImg from './loginPageImg.png';
 import * as Yup from "yup";
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../userInformation/userActions';
 import { Paragraph } from "../../components/Typography";
+
+let canBeLoggedIn = false;
 
 // STYLED COMPONENTS
 const FlexBox = styled(Box)(() => ({
@@ -61,6 +63,9 @@ const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email address").required("Email is required!")
 });
 
+let emailValue = '';
+let passwordValue = '';
+
 export default function Login() {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -70,6 +75,20 @@ export default function Login() {
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
+      emailValue = values.email;
+      passwordValue = values.password;
+
+      console.log(`Email: ${emailValue} from FORMIK`);
+      console.log(`Password: ${passwordValue} from FORMIK`);
+
+      localStorage.setItem("email", emailValue);
+      localStorage.setItem("passwd", passwordValue);
+
+      if (localStorage.getItem("email") && localStorage.getItem("passwd")) {
+        canBeLoggedIn = true;
+        console.log(canBeLoggedIn)
+      }
+
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
@@ -167,6 +186,7 @@ export default function Login() {
                       color="primary"
                       loading={loading}
                       variant="contained"
+                      className="login-button"
                       sx={{ my: 2 }}>
                       Login
                     </LoadingButton>
@@ -189,3 +209,5 @@ export default function Login() {
     </StyledRoot>
   );
 }
+
+export { canBeLoggedIn };
