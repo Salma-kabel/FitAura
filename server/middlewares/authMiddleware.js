@@ -10,7 +10,12 @@ module.exports = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findByPk(decoded.userId);
+
+    req.user = await User.findByPk(decoded.userId, {attributes: {exclude: ['password']}});
+    if (!req.user) {
+      return res.status(403).json({ error: 'User not found' });
+    }
+
     next();
   } catch (error) {
     return res.status(401).json({ error: 'Invalid Token' });

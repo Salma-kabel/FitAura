@@ -1,24 +1,18 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
+const { sendEmail } = require('../services/emailService');
 require('dotenv').config();
 
 exports.register = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
-    const {
-      username,
-      email,
-      password,
-      gender,
-      age,
-      weight,
-      height,
-      bodyFatPercent,
-      muscleMassPercent,
-      goalWeight,
-      goalBodyFatPercent,
-      goalMuscleMassPercent,
-    } = req.body;
+    const { username, email, password } = req.body;
 
     if (await User.findOne({ where: { email } })) {
       return res.status(400).json({ error: 'Email already exists' });
@@ -30,24 +24,28 @@ exports.register = async (req, res) => {
     const user = await User.create({
       username,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      isAdmin: username == 'testadmin' ? true : false,
     });
-
-    if (username == 'testadmin') {
-      await User.update({ isAdmin: true }, { where: { id: user.id } });
-    }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    res.json({ token });
+    await sendEmail(email, token, 'confirm-email');
+
+    res.status(201).json({ message: 'Email Confirmation sent' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
 exports.login = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     const { email, password } = req.body;
 
@@ -56,10 +54,95 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    res.json({ token });
+    if (!user.emailConfirmed) {
+      return res.status(401).json({ error: 'Email not confirmed' });
+    }
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+    res.status(200).setheader('Authorization', `Bearer ${token}`);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+exports.confirmEmail = async (req, res) => {
+  try {
+    let { token } = req.params.token;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.emailConfirmed = true;
+    await user.save();
+
+    token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+    res.status(200).setheader('Authorization', `Bearer ${token}`);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.requestPasswordReset = async (req, res) => {
+  const user = req.user;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const { password } = req.body;
+
+    const token = jwt.sign(
+      { user: `${user.id} ${password}` },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.RESET_PASSWORD_EXPIRATION,
+      }
+    );
+
+    await sendEmail(user.email, token, 'reset-password');
+
+    res.json({ message: 'Reset password email sent' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    let token = req.params.token;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const [userId, password] = decoded.user.split(' ');
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res
+      .status(200)
+      .setheader('Authorization', `Bearer ${token}`)
+      .json({ message: 'Password reset successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
