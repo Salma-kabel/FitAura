@@ -10,8 +10,8 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 router.post('/', authMiddleware, getUser);
-router.put('/', authMiddleware, updateUser);
+router.put('/', updateUser);
 router.delete('/', authMiddleware, deleteUser);
-router.get('/metrics/weekly', authMiddleware, getWeeklyMetrics);
+router.post('/metrics/weekly', getWeeklyMetrics);
 
 module.exports = router;

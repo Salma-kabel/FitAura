@@ -20,11 +20,7 @@ const sendEmail = async (email, token, service) => {
 };
 
 const sendConfirmationEmail = async (email, token) => {
-<<<<<<< HEAD
     const confirmationLink = `http://localhost:5000/api/auth/confirm-email?token=${token}`;
-=======
-    const confirmationLink = `http://localhost:5000/api/auth/confirm-email?token=${token}`
->>>>>>> testfull
     const mailOptions = {
         to: email,
         subject: 'Confirm Email',

@@ -24,11 +24,11 @@ exports.updateUser = async (req, res) => {
   ];
 
   try {
-    if (email && await User.findOne({ where: { email } })) {
-      return res.status(400).json({ error: 'Email already exists' });
-    } else if (username && await User.findOne({ where: { username } })) {
-      return res.status(400).json({ error: 'Username already exists' });
-    }
+  //   if (email && await User.findOne({ where: { email } })) {
+  //     return res.status(400).json({ error: 'Email already exists' });
+  //   } else if (username && await User.findOne({ where: { username } })) {
+  //     return res.status(400).json({ error: 'Username already exists' });
+  //   }
 
     let updatedMetrics = {};
 
@@ -85,8 +85,7 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getWeeklyMetrics = async (req, res) => {
-  const userId = req.user.id;
-
+  const userId = req.body.id;
   try {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -102,7 +101,6 @@ exports.getWeeklyMetrics = async (req, res) => {
         [ 'recordedAt', 'ASC' ],
       ],
     });
-
     res.status(200).json(metrics);
   } catch (error) {
     console.error('Error getting weekly metrics', error);
