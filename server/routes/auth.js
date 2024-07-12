@@ -12,14 +12,14 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 router.post('/register', validate('register'), register);
-router.post('/login', validate('login'), login);
+router.post('/login', login);
 router.post(
   '/request-reset-password',
   validate('requestPasswordReset'),
   authMiddleware,
   requestPasswordReset
 );
-router.get('/reset-password:token', resetPassword);
-router.get('/confirm-email/:token', confirmEmail);
+router.get('/reset-password', resetPassword);
+router.get('/confirm-email', confirmEmail);
 
 module.exports = router;

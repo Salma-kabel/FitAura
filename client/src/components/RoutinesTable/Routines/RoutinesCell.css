@@ -1,0 +1,18 @@
+.routine-cell > th > div {
+    padding: 10px 0;
+    font-weight: normal;
+}
+.edit-button {
+    width: 40px;
+    text-align: center;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+.edit-button:hover {
+    background-color: rgb(230, 230, 230);
+}
+.edit-buttons {
+    display: flex;
+    text-align: right;
+    margin-right: 0;
+}

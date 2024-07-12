@@ -20,7 +20,7 @@ const sendEmail = async (email, token, service) => {
 };
 
 const sendConfirmationEmail = async (email, token) => {
-    const confirmationLink = `${process.env.CLIENT_URL}/confirm-email?token=${token}`;
+    const confirmationLink = `http://localhost:5000/api/auth/confirm-email?token=${token}`;
     const mailOptions = {
         to: email,
         subject: 'Confirm Email',
@@ -30,7 +30,7 @@ const sendConfirmationEmail = async (email, token) => {
 };
 
 const sendResetPasswordEmail = async (email, token) => {
-    const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+    const resetLink = `http://localhost:5000/api/auth/reset-password?token=${token}`;
     const mailOptions = {
         to: email,
         subject: 'Reset Password',

@@ -1,0 +1,60 @@
+/* RoutinesTable.css */
+.routines-table {
+    padding: 20px 10px;
+    border-radius: 15px;
+    box-shadow: 10px 4px 20px -20px rgba(0,0,0,1);
+    background-color: white;
+    width: 97.5%;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.RoutineTableContainer {
+    margin: 20px auto;
+    width: 80%;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.modify-routine-edit {
+    color: #1976d2;
+    cursor: pointer;
+}
+
+.modify-routine-delete {
+    color: red;
+    cursor: pointer;
+}
+
+/* RoutinesCell.css */
+.routine-cell th, .routine-cell td {
+    padding: 10px 0;
+    font-weight: normal;
+    text-align: center;
+}
+
+.edit-button {
+    width: 40px;
+    text-align: center;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.edit-button:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.edit-buttons {
+    display: flex;
+    justify-content: center; /* Align buttons to center */
+    gap: 10px; /* Space between buttons */
+}
