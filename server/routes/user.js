@@ -3,13 +3,15 @@ const {
   updateUser,
   getUser,
   deleteUser,
+  getWeeklyMetrics,
 } = require('../controllers/userController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.get('/', authMiddleware, getUser);
-router.put('/', authMiddleware, updateUser);
+router.post('/', authMiddleware, getUser);
+router.put('/', updateUser);
 router.delete('/', authMiddleware, deleteUser);
+router.post('/metrics/weekly', getWeeklyMetrics);
 
 module.exports = router;

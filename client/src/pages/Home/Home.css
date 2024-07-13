@@ -1,0 +1,43 @@
+.Home {
+    display: flex;
+}
+.home-content {
+    width: 100%;
+    background-color: #fbfafb;
+}
+.home-chart {
+    border-radius: 15px;
+    box-shadow: 10px 4px 20px -20px rgba(0,0,0,1);
+    background-color: white;
+}
+.platform {
+    display: flex;
+}
+.platform-info {
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+.platform-info .info {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+}
+.charts {
+    display: flex;
+    width: 100%;
+}
+.weight-chart,
+.muscle-chart {
+    width: 50%;
+    text-align: center;
+}
+@media (max-width: 767px) {
+    .charts {
+        flex-direction: column;
+    }
+    .weight-chart,
+    .muscle-chart {
+        width: 100%;
+    }
+}

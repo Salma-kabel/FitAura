@@ -14,6 +14,7 @@ const Routine = require('./models/Routine');
 const Exercise = require('./models/Exercise');
 const User = require('./models/User');
 const Goal = require('./models/Goal');
+const UserMetric = require('./models/UserMetric');
 
 User.hasMany(Routine, {
   foreignKey: 'userId',
@@ -35,6 +36,13 @@ User.hasMany(Goal, {
 });
 Goal.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
+User.hasMany(UserMetric, {
+  foreignKey: 'userId',
+  as: 'metrics',
+  onDelete: 'CASCADE',
+});
+UserMetric.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
 Routine.hasMany(Exercise, {
   foreignKey: 'routineId',
   as: 'exercises',
@@ -44,9 +52,14 @@ Exercise.belongsTo(Routine, { foreignKey: 'routineId', as: 'routine' });
 
 const app = express();
 
+
+
 app.use(express.json());
 app.use(cors());
 
+app.get('/', (req, res) => {
+  res.redirect('http://localhost:3000/login');
+});
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
 app.use('/api/exercises', exerciseRoutes);

@@ -23,7 +23,7 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    EmailConfirmed: {
+    emailConfirmed: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

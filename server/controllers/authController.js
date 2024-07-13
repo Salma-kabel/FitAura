@@ -41,11 +41,6 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const { email, password } = req.body;
 
@@ -53,14 +48,41 @@ exports.login = async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
     if (!user.emailConfirmed) {
       return res.status(401).json({ error: 'Email not confirmed' });
     }
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, email: user.email, username: user.username },
+      process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.status(200).setheader('Authorization', `Bearer ${token}`);
+    let data = null;
+    let weights = null;
+    let fats = null;
+    let muscles = null;
+    try {
+        const response = await fetch("http://localhost:5000/api/user/metrics/weekly", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: user.id}),
+        });
+        data = await response.json();
+        weights = data?.map(item => item.weight) || null;
+        fats = data?.map(item => item.bodyFatPercent) || null;
+        muscles = data?.map(item => item.muscleMassPercent) || null;
+    } catch (error) {
+        console.log(error);
+    }
+    res.status(200).send({ authorization: `Bearer ${token}`,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        weight: weights,
+        bodyfat: fats,
+        bodymuscle: muscles,
+      }, });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -68,7 +90,7 @@ exports.login = async (req, res) => {
 
 exports.confirmEmail = async (req, res) => {
   try {
-    let { token } = req.params.token;
+    let token = req.query.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.userId);
@@ -82,20 +104,20 @@ exports.confirmEmail = async (req, res) => {
     token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    res.status(200).setheader('Authorization', `Bearer ${token}`);
+    res.status(200).setHeader('Authorization', `Bearer ${token}`).json({'message': 'Email confirmed'});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.requestPasswordReset = async (req, res) => {
-  const user = req.user;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   try {
+    const user = req.user;
     const { password } = req.body;
 
     const token = jwt.sign(
@@ -115,13 +137,8 @@ exports.requestPasswordReset = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
-    let token = req.params.token;
+    let token = req.query.token;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const [userId, password] = decoded.user.split(' ');

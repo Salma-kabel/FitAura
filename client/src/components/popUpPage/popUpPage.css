@@ -1,0 +1,78 @@
+.popUp-pages {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #0000007a;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    color: white;
+    font-size: 50px;
+}
+.popup-main-page {
+    position: relative;
+    text-align: center;
+}
+.input-routine-name {
+    padding: 10px;
+    border: 0.5px solid #ddd;
+    outline: none;
+}
+.popup-options {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    text-align: center;
+}
+.close-popup {
+    color: black;
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    font-size: 25px;
+    background-color: rgb(215, 215, 215);
+    padding: 10px;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    border: 0.01px solid rgba(0, 0, 0, 0.478);
+    cursor: pointer;
+}
+.exercise-add-button {
+    color: gray;
+    font-size: 25px;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.exercise-add-button.gray {
+    color: gray;
+}
+
+.exercise-add-button.green {
+    color: green;
+}
+
+.submit {
+    border: none;
+    padding: 15px 35px;
+    border-radius: 15px;
+    background-color: #1565c0;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
